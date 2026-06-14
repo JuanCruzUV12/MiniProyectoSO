@@ -189,6 +189,167 @@ docker ps
 
 ---
 
+# Mini Proyecto: Servidor de Aplicaciones Bajo Estrés
+
+## Descripción
+
+Como parte de la asignatura Sistemas Operativos, se desarrolló una aplicación web de estrés con el objetivo de analizar el comportamiento de un entorno multicapa basado en Docker bajo condiciones de alta demanda de recursos.
+
+La aplicación fue implementada utilizando Next.js 14, TypeScript y PostgreSQL, permitiendo generar carga controlada sobre el servidor web y la base de datos para estudiar fenómenos de saturación de CPU, memoria, acceso a disco y concurrencia de procesos.
+
+---
+
+## Funcionalidades Implementadas
+
+### HTTP Flood
+
+Este mecanismo genera múltiples peticiones HTTP concurrentes hacia el servidor web.
+
+**Objetivo:**
+
+* Saturar el event loop de Node.js.
+* Incrementar el uso de CPU del servidor web.
+* Generar alta concurrencia de solicitudes.
+
+**Métricas observadas:**
+
+* Uso de CPU del proceso Node.js.
+* Incremento del Load Average.
+* Mayor número de conexiones activas.
+
+---
+
+### Query Flood
+
+Este mecanismo ejecuta consultas masivas sobre PostgreSQL.
+
+**Objetivo:**
+
+* Incrementar el uso de CPU del motor PostgreSQL.
+* Generar múltiples conexiones concurrentes a la base de datos.
+* Aumentar el tiempo de procesamiento de consultas.
+
+**Métricas observadas:**
+
+* Consultas activas en pg_stat_activity.
+* Uso de CPU del contenedor PostgreSQL.
+* Incremento en la latencia de respuesta.
+
+---
+
+### Insert Flood
+
+Este mecanismo realiza inserciones masivas de registros en PostgreSQL.
+
+**Objetivo:**
+
+* Generar actividad intensiva de escritura.
+* Incrementar el uso de disco.
+* Estresar el sistema WAL de PostgreSQL.
+
+**Métricas observadas:**
+
+* Actividad de escritura en disco.
+* Incremento de operaciones I/O.
+* Crecimiento de registros almacenados.
+
+---
+
+## Herramientas de Monitoreo Utilizadas
+
+Durante las pruebas se utilizaron las siguientes herramientas del sistema operativo Linux:
+
+* htop
+* vmstat
+* docker stats
+* pg_stat_activity
+* free
+* ps
+* pstree
+
+Estas herramientas permitieron identificar los procesos responsables de la carga, los recursos saturados y el comportamiento general del sistema bajo estrés.
+
+---
+
+## Escenarios Ejecutados
+
+### Escenario 1: Aplicación Web de Estrés
+
+Se ejecutaron individualmente los mecanismos:
+
+* HTTP Flood
+* Query Flood
+* Insert Flood
+
+Analizando el impacto generado sobre CPU, memoria y base de datos.
+
+### Escenario 2: Entrenamiento de Modelo de IA
+
+Se ejecutó un notebook de JupyterLab con un modelo de inteligencia artificial diseñado para consumir recursos intensivamente mediante operaciones de entrenamiento.
+
+### Escenario 3: Ejecución Simultánea
+
+Se ejecutaron simultáneamente:
+
+* HTTP Flood
+* Query Flood
+* Entrenamiento del modelo IA
+
+Este escenario permitió observar contención de recursos entre los procesos:
+
+* node
+* postgres
+* python
+
+produciendo un incremento significativo en el uso de CPU y memoria del sistema.
+
+---
+
+## Estrategias de Optimización Aplicadas
+
+Durante el análisis se evaluaron diferentes medidas de administración de recursos:
+
+### Cambio de Prioridad
+
+```bash
+renice -n 10 -p PID
+```
+
+### Limitación de CPU para Contenedores
+
+```bash
+docker update --cpus 1 jupyter-lab
+```
+
+### Limitación de Memoria
+
+```bash
+docker update --memory 3g jupyter-lab
+```
+
+Estas acciones permitieron reducir la competencia por recursos y mejorar la estabilidad del sistema.
+
+---
+
+## Aprendizajes Obtenidos
+
+* Identificación de procesos con alto consumo de recursos.
+* Uso de herramientas de monitoreo en Linux.
+* Administración de procesos y prioridades.
+* Gestión de contenedores Docker bajo carga.
+* Análisis de cuellos de botella en aplicaciones multicapa.
+* Relación entre procesos, recursos físicos y rendimiento del sistema operativo.
+
+---
+
+## Repositorio del Proyecto
+
+El código fuente de la aplicación de estrés, junto con la configuración de Docker y los servicios utilizados durante el laboratorio, se encuentra disponible en este repositorio.
+
+Proyecto desarrollado para la asignatura **Sistemas Operativos – Ingeniería de Sistemas – Universidad del Valle, Sede Tuluá (2026)**.
+
+---
+
 # Integrantes del Proyecto
 
 | Nombre                 | Codigo  |
