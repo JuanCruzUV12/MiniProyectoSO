@@ -1,13 +1,17 @@
-FROM node:20
+FROM node:22-alpine
+
+RUN corepack enable
 
 WORKDIR /app
 
-COPY package*.json ./
-
-RUN npm install
-
 COPY . .
+
+RUN pnpm install
+
+RUN pnpm prisma generate
+
+RUN pnpm build
 
 EXPOSE 3000
 
-CMD ["node", "server.js"]
+CMD ["pnpm","start"]
