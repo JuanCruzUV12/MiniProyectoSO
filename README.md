@@ -81,7 +81,7 @@ docker-lab/
 ## 1. Clonar repositorio
 
 ```bash
-git clone https://github.com/JuanCruzUV12/docker-lab.git
+git clone https://github.com/JuanCruzUV12/MiniProyectoSO.git
 ```
 
 ---
